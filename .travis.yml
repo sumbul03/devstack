@@ -33,8 +33,7 @@ before_install:
   - make dev.clone
   - if [[ $DEVSTACK == 'lms' ]]; then make pull; fi
   - if [[ $DEVSTACK == 'analytics_pipeline' ]]; then make dev.up.analytics_pipeline; fi
-  - make e2e-tests
-  
+   
 
 script:
   - "./.travis/run.sh"
