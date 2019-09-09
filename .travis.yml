@@ -8,12 +8,14 @@ python:
 env:
   - DEVSTACK_WORKSPACE=/tmp DOCKER_COMPOSE_VERSION=1.13.0 SHALLOW_CLONE=1 DEVSTACK='lms'
   - DEVSTACK_WORKSPACE=/tmp DOCKER_COMPOSE_VERSION=1.13.0 SHALLOW_CLONE=1 DEVSTACK='analytics_pipeline'
+  - BITBUCKET_CLONE_DIR=/tmp
 
 services:
   - docker
 
 before_install:
   # Upgrade Docker to the latest version
+  - pwd
   - docker version
   - sudo apt-get update
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
@@ -26,11 +28,12 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
   - docker-compose --version
-
+  - git log
   - make requirements
   - make dev.clone
   - if [[ $DEVSTACK == 'lms' ]]; then make pull; fi
   - if [[ $DEVSTACK == 'analytics_pipeline' ]]; then make dev.up.analytics_pipeline; fi
+  - make e2e-tests
 
 script:
   - "./.travis/run.sh"
