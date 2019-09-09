@@ -18,7 +18,7 @@ YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
 
 # Bring the databases online.
-docker-compose up -d mysql mongo
+docker-compose up -d mysql mongo || True
 
 # Ensure the MySQL server is online and usable
 echo "Waiting for MySQL"
@@ -42,13 +42,6 @@ docker exec -i edx.devstack.mongo mongo < mongo-provision.js
 
 # Nothing special needed for studio
 docker-compose $DOCKER_COMPOSE_FILES up -d studio
-./provision-ecommerce.sh
-./provision-discovery.sh
-./provision-credentials.sh
-./provision-e2e.sh
-./provision-forum.sh
-./provision-notes.sh
-
 docker image prune -f
 
 echo -e "${GREEN}Provisioning complete!${NC}"
