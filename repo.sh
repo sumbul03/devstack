@@ -11,9 +11,7 @@ if [ -z "$DEVSTACK_WORKSPACE" ]; then
     echo "need to set workspace dir"
     exit 1
 elif [ -d "$DEVSTACK_WORKSPACE" ]; then
-    echo $DEVSTACK_WORKSPACE
     cd $DEVSTACK_WORKSPACE
-    pwd
 else
     echo "Workspace directory $DEVSTACK_WORKSPACE doesn't exist"
     exit 1
@@ -24,7 +22,7 @@ repos=(
     "https://github.com/edx/credentials.git"
     "https://github.com/edx/cs_comments_service.git"
     "https://github.com/edx/ecommerce.git"
-    "https://github.com/sumbul03/edx-e2e-tests.git"
+    "https://github.com/edx/edx-e2e-tests.git"
     "https://github.com/edx/edx-notes-api.git"
     "https://github.com/edx/edx-platform.git"
     "https://github.com/edx/xqueue.git"
@@ -41,8 +39,7 @@ name_pattern=".*/(.*).git"
 _checkout ()
 {
     repos_to_checkout=("$@")
-    pwd
-    dir
+
     if [ -z "$OPENEDX_RELEASE" ]; then
         branch="master"
     else
@@ -88,26 +85,12 @@ _clone ()
             printf "The [%s] repo is already checked out. Continuing.\n" $name
         else
             if [ "${SHALLOW_CLONE}" == "1" ]; then
-                pwd
-                git clone --depth=1 $repo
-                whoami
-                dir
-                sleep 10
+                git clone --depth=1 --branch=open-release/hawthorn.master $repo
             else
-                pwd
-                git clone $repo
-                sleep 10
+                git clone --branch=open-release/hawthorn.master $repo
             fi
             if [ -n "${OPENEDX_RELEASE}" ]; then
-                pwd
-                echo $name
-                cd $name
-                pwd
-                echo ${OPENEDX_RELEASE}
-                git fetch origin open-release/${OPENEDX_RELEASE}:open-release/${OPENEDX_RELEASE}
-                git branch -a
                 git checkout open-release/${OPENEDX_RELEASE}
-                cd ..
             fi
         fi
     done
